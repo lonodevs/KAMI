@@ -3,6 +3,8 @@ ena
 conf t
 hostname BR-RTR
 
+ntp timezone utc+4
+
 #СОЗДАНИЕ ЛОГИЧЕСОГО ИНТЕРФЕЙСА
 interface int0
   description "to isp"
