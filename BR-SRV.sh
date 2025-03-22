@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 cat <<EOF > /etc/net/ifaces/ens18/options
 TYPE=eth
 DISABLED=no
@@ -14,6 +15,7 @@ cat <<EOF > /etc/net/ifaces/ens18/ipv4address
 EOF
 
 timedatectl set-timezone Europe/Samara
+timedatectl status
 
 systemctl disable —now ahttpd
 apt-get install -y docker-{ce,compose}
