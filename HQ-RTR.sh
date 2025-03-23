@@ -22,10 +22,10 @@ interface int0
 #НАСТРОЙКА ИНТЕРФЕСОВ ДЛЯ ВЛАНОВ
 interface int1
   description "to hq-srv"
-  ip address 192.168.100.1/26
+  ip address 192.168.1.1/26
 interface int2
   description "to hq-cli"
-  ip address 192.168.200.1/28
+  ip address 192.168.1.65/28
 
 #ГОТОВИМ ФИЗИЧЕСКИЕ ИНТЕРФЕЙСЫ
 port te1
@@ -60,8 +60,8 @@ ip tunnel 172.16.4.2 172.16.5.2 mode gre
 router ospf 1
   router-id 1.1.1.1
   network 172.16.0.0/30 area 0
-  network 192.168.100.0/26 area 0
-  network 192.168.200.0/28 area 0
+  network 192.168.1.0/26 area 0
+  network 192.168.1.0/28 area 0
   passive-interface default
   no passive-interface tunnel.0
 
@@ -73,15 +73,15 @@ int int2
 int int0
   ip nat outside
 
-ip nat pool NAT_POOL 192.168.100.1-192.168.100.62,192.168.200.1-192.168.200.14
+ip nat pool NAT_POOL 192.168.1.1-192.168.1.62,192.168.1.65-192.168.1.78
 ip nat source dynamic inside-to-outside pool NAT_POOL overload interface int0
 
 #НАСТРОЙКА DHCP
-ip pool hq-cli 192.168.200.14-192.168.200.14
+ip pool hq-cli 192.168.1.66-192.168.1.78
 dhcp-server 1
   pool hq-cli 1
     mask 28
-    gateway 192.168.200.1
+    gateway 192.168.1.65
     dns 192.168.100.62
     domain-name au-team.irpo
     
