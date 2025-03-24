@@ -163,4 +163,26 @@ echo "Проверка обратной зоны:"
 nslookup 192.168.1.62 127.0.0.1
 
 
+#ФАЙЛОВЫЙ СЕРВЕР требует добавления 3 дисков
+mdadm --zero-superblock --force /dev/sd
+wipefs --all --force /dev/sd
+mdadm --create /dev/md0 -l 5 -n 3 /dev/sd
+
+
+mkfs -t ext4 /dev/md0
+mkdir /etc/mdadm
+echo "DEVICE partitions" > /etc/mdadm/mdadm.conf
+mdadm --detail --scan | awk '/ARRAY/ {print}' >> /etc/mdadm/mdadm.conf
+/dev/md0  /mnt/raid5  ext4  defaults  0  0
+mount -a
+
+apt-get install -y nfs-{server,utils}
+mkdir /mnt/raid5/nfs
+/mnt/raid5/nfs 192.168.1.0/28(rw,no_root_squash)
+exportfs -arv
+systemctl enable --now nfs-server
+
+
+
+
 
