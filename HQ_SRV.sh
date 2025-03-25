@@ -163,26 +163,78 @@ echo "Проверка обратной зоны:"
 nslookup 192.168.1.62 127.0.0.1
 
 
-#ФАЙЛОВЫЙ СЕРВЕР требует добавления 3 дисков
-mdadm --zero-superblock --force /dev/sd
-wipefs --all --force /dev/sd
-mdadm --create /dev/md0 -l 5 -n 3 /dev/sd
+# Определяем диски размером ~1 ГБ (допуск 10%)
+TARGET_SIZE_GB=1
+TOLERANCE_PERCENT=10
+
+# Минимальный и максимальный размер в байтах (1 ГБ = 1,073,741,824 байт)
+MIN_SIZE=$(( (TARGET_SIZE_GB * 1073741824) * (100 - TOLERANCE_PERCENT) / 100 ))
+MAX_SIZE=$(( (TARGET_SIZE_GB * 1073741824) * (100 + TOLERANCE_PERCENT) / 100 ))
+
+# Ищем подходящие диски (не смонтированные и не в RAID)
+declare -a suitable_disks=()
+
+for disk in $(lsblk -lnbo NAME,SIZE,TYPE | grep -E 'disk$' | awk '{print $1}'); do
+    size=$(lsblk -lnbo SIZE /dev/"$disk")
+    if (( size >= MIN_SIZE && size <= MAX_SIZE )); then
+        if ! mount | grep -q "/dev/$disk" && ! grep -q "^$disk" /proc/mdstat; then
+            suitable_disks+=("/dev/$disk")
+        fi
+    fi
+done
+
+# Проверяем, что найдено ровно 3 диска (для RAID 5)
+if [ ${#suitable_disks[@]} -ne 3 ]; then
+    echo "Ошибка: Для RAID 5 требуется ровно 3 диска. Найдено: ${#suitable_disks[@]}"
+    echo "Найденные диски: ${suitable_disks[*]}"
+    exit 1
+fi
 
 
+# Очищаем суперблоки и файловые системы на дисках
+for disk in "${suitable_disks[@]}"; do
+    mdadm --zero-superblock --force "$disk"
+    wipefs --all --force "$disk"
+done
+
+# Создаем RAID 5
+mdadm --create /dev/md0 -l 5 -n 3 "${suitable_disks[@]}"
+if [ $? -ne 0 ]; then
+    echo "Ошибка при создании RAID 5!"
+    exit 1
+fi
+
+# Создаем файловую систему ext4
 mkfs -t ext4 /dev/md0
-mkdir /etc/mdadm
+
+# Создаем каталог для монтирования
+mkdir -p /mnt/raid5
+
+# Настраиваем mdadm.conf
+mkdir -p /etc/mdadm
 echo "DEVICE partitions" > /etc/mdadm/mdadm.conf
 mdadm --detail --scan | awk '/ARRAY/ {print}' >> /etc/mdadm/mdadm.conf
-/dev/md0  /mnt/raid5  ext4  defaults  0  0
+
+# Добавляем в fstab для автоматического монтирования при загрузке
+echo "/dev/md0  /mnt/raid5  ext4  defaults  0  0" >> /etc/fstab
+
+
 mount -a
 
+
+apt-get update
 apt-get install -y nfs-{server,utils}
-mkdir /mnt/raid5/nfs
-/mnt/raid5/nfs 192.168.1.0/28(rw,no_root_squash)
+
+# Создаем каталог для NFS
+mkdir -p /mnt/raid5/nfs
+
+# Настраиваем экспорт (замените 192.168.1.0/28 на свою подсеть)
+echo "/mnt/raid5/nfs 192.168.1.0/28(rw,no_root_squash)" >> /etc/exports
+
+# Применяем настройки NFS
 exportfs -arv
 systemctl enable --now nfs-server
 
-
-
-
-
+echo "Готово!"
+echo "RAID 5 создан на /dev/md0 и смонтирован в /mnt/raid5"
+echo "NFS-сервер настроен и экспортирует /mnt/raid5/nfs"
