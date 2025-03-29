@@ -23,7 +23,44 @@ nameserver 8.8.8.8
 nameserver 77.88.8.8
 EOF
 
+# Создание пользователя sshuser с паролем P@ssw0rd
+echo "Creating sshuser with password P@ssw0rd"
+useradd -m -s /bin/bash sshuser
+echo "sshuser:P@ssw0rd" | chpasswd
 
+# Добавление пользователя в группу sudo (если нужно)
+usermod -aG sudo sshuser
+
+# Настройка SSH-доступа
+echo "Configuring SSH access"
+
+# Резервное копирование конфига SSH
+cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
+
+# Разрешить аутентификацию по паролю (если нужно)
+sed -i 's/^PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
+
+# Разрешить вход для sshuser
+if ! grep -q "AllowUsers sshuser" /etc/ssh/sshd_config; then
+    echo "AllowUsers sshuser" >> /etc/ssh/sshd_config
+fi
+
+# Перезапуск SSH сервера
+systemctl restart sshd
+
+# Информация для подключения
+echo "SSH access configured:"
+echo "Username: sshuser"
+echo "Password: P@ssw0rd"
+echo "You can now connect using: ssh sshuser@$(hostname -I | awk '{print $1}')"
+
+# Дополнительные настройки безопасности (опционально)
+# Установка сроков действия пароля
+chage -M 90 sshuser
+# Запрет пустых паролей
+sed -i 's/^PermitEmptyPasswords no/PermitEmptyPasswords no/' /etc/ssh/sshd_config
+# Запрет входа root по SSH
+sed -i 's/^PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config
 
 # HQ-SRV Configuration (RAID 5 + NFS Server)
 echo "Configuring HQ-SRV (RAID 5 + NFS Server)"
