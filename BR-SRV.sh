@@ -16,68 +16,99 @@ EOF
 
 timedatectl set-timezone Europe/Samara
 timedatectl status
-#!/bin/bash
 
-# Установка Chrony
-echo "Устанавливаем chrony..."
+# Создание пользователя sshuser с паролем P@ssw0rd
+echo "Creating sshuser with password P@ssw0rd"
+useradd -m -s /bin/bash sshuser
+echo "sshuser:P@ssw0rd" | chpasswd
+
+# Добавление пользователя в группу sudo (если нужно)
+usermod -aG sudo sshuser
+
+# Настройка SSH-доступа
+echo "Configuring SSH access"
+
+# Резервное копирование конфига SSH
+cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
+
+# Разрешить аутентификацию по паролю (если нужно)
+sed -i 's/^PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
+
+# Разрешить вход для sshuser
+if ! grep -q "AllowUsers sshuser" /etc/ssh/sshd_config; then
+    echo "AllowUsers sshuser" >> /etc/ssh/sshd_config
+fi
+
+# Перезапуск SSH сервера
+systemctl restart sshd
+
+# Информация для подключения
+echo "SSH access configured:"
+echo "Username: sshuser"
+echo "Password: P@ssw0rd"
+echo "You can now connect using: ssh sshuser@$(hostname -I | awk '{print $1}')"
+
+# Дополнительные настройки безопасности (опционально)
+# Установка сроков действия пароля
+chage -M 90 sshuser
+# Запрет пустых паролей
+sed -i 's/^PermitEmptyPasswords no/PermitEmptyPasswords no/' /etc/ssh/sshd_config
+
+
 apt-get update
 apt-get install -y chrony
 
-# Резервное копирование текущего конфига
-echo "Создаем backup конфигурации..."
+# Backup original config
+echo "Backing up original chrony configuration..."
 cp /etc/chrony/chrony.conf /etc/chrony/chrony.conf.bak
 
-# Настройка Chrony как NTP-сервера
-echo "Настраиваем /etc/chrony/chrony.conf..."
-cat > /etc/chrony/chrony.conf << 'EOF'
-# Настройки сервера
+# Configure Chrony as local NTP server
+echo "Configuring /etc/chrony/chrony.conf..."
+cat > /etc/chrony/chrony.conf << 'EOL'
 server 127.0.0.1 iburst prefer
 hwtimestamp *
 local stratum 5
 allow 0/0
 
-# Дополнительные настройки
-keyfile /etc/chrony/chrony.keys
-driftfile /var/lib/chrony/chrony.drift
+# Logging configuration
 logdir /var/log/chrony
-maxupdateskew 100.0
-makestep 1.0 3
-rtcsync
-EOF
+log measurements statistics tracking
 
-# Перезапуск службы
-echo "Перезапускаем chronyd..."
+# Key file configuration
+keyfile /etc/chrony/chrony.keys
+
+# Command socket
+commandkey 1
+generatecommandkey
+
+# This directive sets the maximum interval between clock updates
+maxupdateskew 100.0
+
+# Step the system clock if the adjustment is larger than 1 second
+makestep 1.0 3
+EOL
+
+# Restart Chrony service
 systemctl restart chronyd
 systemctl enable chronyd
 
-# Проверка работы
-echo -e "\nПроверка конфигурации:"
-echo "1. Источники времени:"
+# Verify configuration
+echo "Current time sources:"
 chronyc sources
 
-echo -e "\n2. Уровень стратума:"
+echo "Current stratum level:"
 chronyc tracking | grep Stratum
 
-echo -e "\n3. Состояние службы:"
-systemctl status chronyd --no-pager -l
-
-# Настройка клиента (информация для настройки EcoRouter)
-echo -e "\nДля настройки клиента EcoRouter используйте следующие параметры:"
-echo "IP-адрес этого сервера: $(hostname -I | awk '{print $1}')"
-echo "Команды для EcoRouter:"
-echo "ntp server $(hostname -I | awk '{print $1}')"
-echo "ntp timezone utc+5"
-
-echo "show ntp status"
-
+echo "NTP server status:"
+systemctl status chronyd --no-pager
 
 
 systemctl disable —now ahttpd
 apt-get install -y docker-{ce,compose}
 systemctl enable --now docker
 
-touch wiki.yaml
-cat <<EOF > wiki.yaml
+touch /home/sshuser/wiki.yaml
+cat <<EOF > /home/sshuser/wiki.yaml
 services:
   mediawiki:
     container_name: wiki
