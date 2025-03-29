@@ -49,6 +49,31 @@ EOF
 
 systemctl restart sshd
 
+cat << EOF > /etc/dnsmasq/dnsmasq.conf
+no-resolv
+no-poll
+no-hosts
+#listen-address=192.168.1.62
+
+server=77.88.8.8
+server=8.8.8.8
+
+cache-size=2000
+all-servers
+no-negcache
+
+host-record=hq-rtr.au-team.ipro,192.168.1.1
+host-record=hq-srv.au-team.ipro,192.168.1.62
+host-record=hq-cli.au-team.ipro,192.168.1.65
+address=/br-rtr.au-team.ipro/192.168.0.1
+address=/br-srv.au-team.ipro/192.168.0.30
+
+cname=moodle.au-team.ipro,hq-rtr.au-team.ipro
+cname=wiki.au-team.ipro,hq-rtr.au-team.ipro
+EOF
+
+
+
 # Identify available disks (assuming 3 disks are available)
 DISKS=($(lsblk -d -o NAME -n | grep -v "md0" | grep -E "^sd[b-d]$"))
 
