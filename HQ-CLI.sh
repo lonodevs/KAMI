@@ -1,3 +1,6 @@
+
+hostnamectl set-hostname HQ-CLI.au-team.ipro; exec bash
+
 # Install NFS client packages
 apt-get update
 apt-get install -y nfs-common
