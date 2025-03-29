@@ -5,6 +5,6 @@
 А далее вы уже выбираете нужный вам скрипт даете права на его выполнение и применяете: chmod +x X.sh && sh X.sh, где Х это назавание нужного вам скрипта**
 
 <p align="center">
-  <img width="450" height="600" src="[https://github.com/user-attachments/assets/8ee209f5-6fed-4f03-bbe3-e202155957b3](https://github.com/OOTSOSI/demo25/blob/main/scheme.jpg)"
+  <img width="450" height="600" src="[https://github.com/OOTSOSI/demo25/blob/main/scheme.jpg]"
 <p\>
 <p align="center"><strong>Топология</strong></p>
