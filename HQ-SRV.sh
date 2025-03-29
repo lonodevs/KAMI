@@ -23,47 +23,29 @@ nameserver 8.8.8.8
 nameserver 77.88.8.8
 EOF
 
-# Создание пользователя sshuser с паролем P@ssw0rd
-echo "Creating sshuser with password P@ssw0rd"
-useradd -m -s /bin/bash sshuser
+useradd sshuser -u 1010
 echo "sshuser:P@ssw0rd" | chpasswd
+usermod -aG wheel sshuser
 
-# Добавление пользователя в группу sudo (если нужно)
-usermod -aG sudo sshuser
+touch /etc/sudoers
+cat <<EOF /etc/sudoers
+sshuser ALL=(ALL) NOPASSWD:ALL
+EOF
 
-# Настройка SSH-доступа
-echo "Configuring SSH access"
+sed -i 's/#Port 22/Port 2024/Ig' /etc/openssh/sshd_config
+sed -i 's/#MaxAuthTries 6/MaxAuthTries 2/Ig' /etc/openssh/sshd_config
+sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/Ig' /etc/openssh/sshd_config
+sed -i 's/#Banner none/Banner /etc/openssh/bannermotd/Ig' /etc/openssh/sshd_config
+echo "AllowUsers sshuser" | tee -a /etc/openssh/sshd_config
 
-# Резервное копирование конфига SSH
-cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
+touch /etc/openssh/bannermotd
+cat <<EOF /etc/openssh/bannermotd
+----------------------
+Authorized access only
+----------------------
+EOF
 
-# Разрешить аутентификацию по паролю (если нужно)
-sed -i 's/^PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
-
-# Разрешить вход для sshuser
-if ! grep -q "AllowUsers sshuser" /etc/ssh/sshd_config; then
-    echo "AllowUsers sshuser" >> /etc/ssh/sshd_config
-fi
-
-# Перезапуск SSH сервера
 systemctl restart sshd
-
-# Информация для подключения
-echo "SSH access configured:"
-echo "Username: sshuser"
-echo "Password: P@ssw0rd"
-echo "You can now connect using: ssh sshuser@$(hostname -I | awk '{print $1}')"
-
-# Дополнительные настройки безопасности (опционально)
-# Установка сроков действия пароля
-chage -M 90 sshuser
-# Запрет пустых паролей
-sed -i 's/^PermitEmptyPasswords no/PermitEmptyPasswords no/' /etc/ssh/sshd_config
-# Запрет входа root по SSH
-sed -i 's/^PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config
-
-# HQ-SRV Configuration (RAID 5 + NFS Server)
-echo "Configuring HQ-SRV (RAID 5 + NFS Server)"
 
 # Identify available disks (assuming 3 disks are available)
 DISKS=($(lsblk -d -o NAME -n | grep -v "md0" | grep -E "^sd[b-d]$"))
