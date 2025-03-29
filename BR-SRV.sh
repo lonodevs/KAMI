@@ -1,6 +1,6 @@
 #!/bin/bash
 
-
+hostnamectl set-hostname BR-SRV.au-team.ipro; exec bash
 cat <<EOF > /etc/net/ifaces/ens18/options
 TYPE=eth
 DISABLED=no
