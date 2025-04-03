@@ -41,52 +41,22 @@ EOF
 
 systemctl restart sshd
 
-apt-get update
-apt-get install -y chrony
 
-# Backup original config
-echo "Backing up original chrony configuration..."
-cp /etc/chrony/chrony.conf /etc/chrony/chrony.conf.bak
-
-# Configure Chrony as local NTP server
-echo "Configuring /etc/chrony/chrony.conf..."
-cat > /etc/chrony/chrony.conf << 'EOL'
-server 127.0.0.1 iburst prefer
-hwtimestamp *
-local stratum 5
-allow 0/0
-
-# Logging configuration
-logdir /var/log/chrony
-log measurements statistics tracking
-
-# Key file configuration
-keyfile /etc/chrony/chrony.keys
-
-# Command socket
-commandkey 1
-generatecommandkey
-
-# This directive sets the maximum interval between clock updates
-maxupdateskew 100.0
-
-# Step the system clock if the adjustment is larger than 1 second
-makestep 1.0 3
-EOL
-
-# Restart Chrony service
-systemctl restart chronyd
-systemctl enable chronyd
-
-# Verify configuration
-echo "Current time sources:"
-chronyc sources
-
-echo "Current stratum level:"
-chronyc tracking | grep Stratum
-
-echo "NTP server status:"
-systemctl status chronyd --no-pager
+apt-get install chrony -y 
+sed -i '3i#pool pool.ntp.org iburst' /etc/chrony.conf
+systemctl enable --now chronyd
+cat <<EOF >> /etc/resolv.conf 
+nameserver 8.8.8.8
+EOF
+apt-get update && apt-get install -y task-samba-dc bind 
+control bind-chroot disabled
+grep -q KRB5RCACHETYPE /etc/sysconfig/bind || echo 'KRB5RCACHETYPE="none"' >> /etc/sysconfig/bind
+systemctl stop bind
+rm -f /etc/samba/smb.conf
+rm -rf /var/lib/samba
+rm -rf /var/cache/samba
+mkdir -p /var/lib/samba/sysvol
+samba-tool domain provision --realm=au-team.irpo --domain=au-team --adminpass='P@ssw0rd' --dns-backend=SAMBA_INTERNAL --server-role=dc --use-rfc2307
 
 
 systemctl disable —now ahttpd
