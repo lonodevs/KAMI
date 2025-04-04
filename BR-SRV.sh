@@ -86,6 +86,18 @@ cd /etc/ansible
 mkdir group_vars
 touch group_vars/{all.yml,Networking.yml}
 
+cat <<EOF >> /etc/ansible/group_vars/all.yml
+ansible_ssh_user: sshuser
+ansible_ssh_pass: P@ssw0rd
+ansible_python_interpreter: /usr/bin/python3
+EOF
+
+cat <<EOF >> /etc/ansible/group_vars/Networking.yml
+
+ansible_connection: network_cli
+ansible_network_os: ios
+EOF
+
 systemctl disable —now ahttpd
 apt-get install -y docker-{ce,compose}
 systemctl enable --now docker
