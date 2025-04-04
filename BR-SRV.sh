@@ -1,6 +1,9 @@
 #!/bin/bash
 
+#Переименование виртуалки
 hostnamectl set-hostname BR-SRV.au-team.ipro; exec bash
+
+#Настройка интерфейсов и времени
 cat <<EOF > /etc/net/ifaces/ens18/options
 TYPE=eth
 DISABLED=no
@@ -17,6 +20,7 @@ EOF
 timedatectl set-timezone Europe/Samara
 timedatectl status
 
+#Создание пользователя sshuser и настройка sshd конфига
 useradd sshuser -u 1010
 echo "sshuser:P@ssw0rd" | chpasswd
 usermod -aG wheel sshuser
@@ -41,13 +45,16 @@ EOF
 
 systemctl restart sshd
 
-
+#Создание NTP
 apt-get install chrony -y 
 sed -i '3i#pool pool.ntp.org iburst' /etc/chrony.conf
 systemctl enable --now chronyd
+
 cat <<EOF >> /etc/resolv.conf 
 nameserver 8.8.8.8
 EOF
+
+#Создание Samba DC
 apt-get update && apt-get install -y task-samba-dc bind 
 control bind-chroot disabled
 grep -q KRB5RCACHETYPE /etc/sysconfig/bind || echo 'KRB5RCACHETYPE="none"' >> /etc/sysconfig/bind
@@ -58,6 +65,7 @@ rm -rf /var/cache/samba
 mkdir -p /var/lib/samba/sysvol
 samba-tool domain provision --realm=au-team.irpo --domain=au-team --adminpass='P@ssw0rd' --dns-backend=SAMBA_INTERNAL --server-role=dc --use-rfc2307
 
+#Настройка Ansible
 apt-get install -y ansible sshpass
 
 sed -i 's/#inventory = /etc/ansible/hosts / #inventory = ./inventory.yml/Ig /etc/ansible/ansible.cfg
@@ -98,6 +106,7 @@ ansible_connection: network_cli
 ansible_network_os: ios
 EOF
 
+#Установка Docker 
 systemctl disable —now ahttpd
 apt-get install -y docker-{ce,compose}
 systemctl enable --now docker
