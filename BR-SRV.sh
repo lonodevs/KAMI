@@ -58,6 +58,33 @@ rm -rf /var/cache/samba
 mkdir -p /var/lib/samba/sysvol
 samba-tool domain provision --realm=au-team.irpo --domain=au-team --adminpass='P@ssw0rd' --dns-backend=SAMBA_INTERNAL --server-role=dc --use-rfc2307
 
+apt-get install -y ansible sshpass
+
+sed -i 's/#inventory = /etc/ansible/hosts / #inventory = ./inventory.yml/Ig /etc/ansible/ansible.cfg
+sed -i 's/#host_key_checking = True/host_key_checking = False/Ig /etc/ansible/ansible.cfg
+
+cat <<EOF >> /etc/ansible/inventory.yml
+ all:
+  children:
+    Networking:
+      hosts:
+        hq-rtr:
+        br-rtr:
+    Servers:
+      hosts:
+        hq-srv:
+          ansible_host: 192.168.100.62
+          ansible_port: 2024
+    Clients:
+      hosts:
+        hq-cli:
+          ansible_host: 192.168.200.14
+          ansible_port: 2024
+EOF
+
+cd /etc/ansible
+mkdir group_vars
+touch group_vars/{all.yml,Networking.yml}
 
 systemctl disable —now ahttpd
 apt-get install -y docker-{ce,compose}
