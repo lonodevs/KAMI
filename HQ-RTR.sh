@@ -87,3 +87,6 @@ dhcp-server 1
     
 interface int2
 dhcp-server 1
+
+#СТАТИЧЕСКИЙ ПРОБРОС
+ip nat source static tcp 192.168.100.1 2024 192.168.100.62 2024
