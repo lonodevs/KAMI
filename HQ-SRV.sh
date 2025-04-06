@@ -214,5 +214,15 @@ echo "HQ-SRV configuration complete"
 echo "RAID 5 created: /dev/md0 mounted at /raid5"
 echo "NFS share: /raid5/nfs available to 192.168.2.0/28"
 
-
+#Установка Moodle
+apt-get install -y moodle moodle-apache2 moodle-base moodle-local-mysql phpMyAdmin
+systemctl enable --now mysqld
+mysqladmin password 'P@ssw0rd'
+cat /etc/httpd2/conf/include/Directory_moodle_default.conf | grep 'Require all granted' || sed -i '/AllowOverride None/a Require all granted' /etc/httpd2/conf/include/Directory_moodle_default.conf
+sed -i 's/; max_input_vars = 1000/max_input_vars = 5000/g' /etc/php/8.2/apache2-mod_php/php.ini
+systemctl enable --now httpd2
+mysql -u root -p
+create user 'moodle'@'localhost' identified by 'P@ssw0rd';
+create database moodledb default character set utf8 collate utf8_unicode_ci;
+grant all privileges on moodledb.* to moodle@localhost;
 
