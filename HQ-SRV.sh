@@ -25,6 +25,7 @@ nameserver 8.8.8.8
 nameserver 77.88.8.8
 EOF
 
+#Создание пользователя sshuser и настройка sshd конфига
 useradd sshuser -u 1010
 echo "sshuser:P@ssw0rd" | chpasswd
 usermod -aG wheel sshuser
@@ -37,8 +38,6 @@ EOF
 sed -i 's/#Port 22/Port 2024/Ig' /etc/openssh/sshd_config
 sed -i 's/#MaxAuthTries 6/MaxAuthTries 2/Ig' /etc/openssh/sshd_config
 sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/Ig' /etc/openssh/sshd_config
-sed -i 's/#Banner none/Banner /etc/openssh/bannermotd/Ig' /etc/openssh/sshd_config
-echo "AllowUsers sshuser" | tee -a /etc/openssh/sshd_config
 
 touch /etc/openssh/bannermotd
 cat <<EOF /etc/openssh/bannermotd
@@ -46,27 +45,11 @@ cat <<EOF /etc/openssh/bannermotd
 Authorized access only
 ----------------------
 EOF
-
 systemctl restart sshd
+
 if [ "$HOSTNAME" = HQ-SRV.au-team.irpo ]; then
 useradd sshuser -u 1010
-echo -e "P@ssw0rd\nP@ssw0rd" | passwd sshuser
-usermod -aG wheel sshuser
-cat <<EOF >> /etc/sudoers
-sshuser ALL=(ALL) NOPASSWD:ALL
-EOF
-sed -i 's/#Port 22/Port 2024/' /etc/openssh/sshd_config
-sed -i 's/#MaxAuthTries 6/MaxAuthTries 2/' /etc/openssh/sshd_config
-sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/openssh/sshd_config
-cat <<EOF >> /etc/openssh/sshd_config 
-AllowUsers sshuser
-EOF
-cat << EOF >> /etc/openssh/bannermotd
-----------------------
-Authorized access only
-----------------------
-EOF
-systemctl restart sshd
+
 apt-get update && apt-get install -y dnsmasq
 cat > /etc/dnsmasq.conf <<EOF
 no-resolv
