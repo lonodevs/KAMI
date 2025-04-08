@@ -35,7 +35,7 @@ sshuser ALL=(ALL) NOPASSWD:ALL
 EOF
 
 
-CONFIG_FILE="/etc/ssh/sshd_config"  
+CONFIG_FILE="/etc/openssh/sshd_config"  
 
 # Изменить SSH-порт с 22 на 2024  
 sed -i 's/^#Port 22$/Port 2024/' "$CONFIG_FILE"  
@@ -46,8 +46,8 @@ sed -i 's/^#MaxAuthTries 6$/MaxAuthTries 2/' "$CONFIG_FILE"
 # Разрешить аутентификацию по паролю 
 sed -i 's/^#PasswordAuthentication yes$/PasswordAuthentication yes/' "$CONFIG_FILE"  
 
-touch /etc/openssh/bannermotd
-cat <<EOF /etc/openssh/bannermotd
+touch "$CONFIG_FILE"/bannermotd
+cat <<EOF "$CONFIG_FILE"/bannermotd
 
 ----------------------
 Authorized access only
