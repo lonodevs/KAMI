@@ -8,7 +8,7 @@
 
 ```apt-get update -y && apt-get install git -y && git clone https://github.com/OOTSOSI/demo25 && cd demo25/ && chmod +x ISP.sh && sh ISP.sh```
 <br/>
-```apt-get update -y && apt-get install git -y && git clone https://github.com/OOTSOSI/demo25 && cd demo25/ && chmod +x HQ-SRV.sh && sh HQ-SRV.sh```
+```apt-get update -y && apt-get install git -y && git clone https://github.com/OOTSOSI/demo25 && cd demo25/ && chmod +x 1.sh && sh 1.sh```
 <br/>
 ```apt-get update -y && apt-get install git -y && git clone https://github.com/OOTSOSI/demo25 && cd demo25/ && chmod +x BR-SRV.sh && sh BR-SRV.sh```
 <br/>
