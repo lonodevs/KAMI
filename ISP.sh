@@ -56,8 +56,6 @@ EOF
 sed -i 's/#Port 22/Port 2024/Ig' /etc/openssh/sshd_config
 sed -i 's/#MaxAuthTries 6/MaxAuthTries 2/Ig' /etc/openssh/sshd_config
 sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/Ig' /etc/openssh/sshd_config
-sed -i 's/#Banner none/Banner /etc/openssh/bannermotd/Ig' /etc/openssh/sshd_config
-echo "AllowUsers sshuser" | tee -a /etc/openssh/sshd_config
 
 touch /etc/openssh/bannermotd
 cat <<EOF /etc/openssh/bannermotd
@@ -65,5 +63,9 @@ cat <<EOF /etc/openssh/bannermotd
 Authorized access only
 ----------------------
 EOF
+
+sed -i 's/#Banner none/Banner /etc/openssh/bannermotd/Ig' /etc/openssh/sshd_config
+echo "AllowUsers sshuser" | tee -a /etc/openssh/sshd_config
+
 
 systemctl restart sshd
