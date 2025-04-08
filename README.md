@@ -6,7 +6,7 @@
 
 **3.Чтобы использовать данный скрипт нужно выполнить одну команду:**
 
-```apt-get update -y && apt-get install git -y && git clone https://github.com/OOTSOSI/demo25 && cd demo25```
+```apt-get update -y && apt-get install git -y && git clone https://github.com/OOTSOSI/demo25 && cd demo25/ && chmod +x ISP.sh && sh ISP.sh```
 
 
 **А далее вы уже выбираете нужный вам скрипт даете права на его выполнение и применяете: chmod +x X.sh && sh X.sh, где Х это назавание нужного вам скрипта**
