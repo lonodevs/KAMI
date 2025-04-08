@@ -12,8 +12,7 @@
 <br/>
 ```apt-get update -y && apt-get install git -y && git clone https://github.com/OOTSOSI/demo25 && cd demo25/ && chmod +x BR-SRV.sh && sh BR-SRV.sh```
 <br/>
-
-**А далее вы уже выбираете нужный вам скрипт даете права на его выполнение и применяете: chmod +x X.sh && sh X.sh, где Х это назавание нужного вам скрипта**
+```sh='PVE-ASDaC-BASH.sh';curl -sOL "https://raw.githubusercontent.com/PavelAF/PVE-ASDaC-BASH/main/$sh"&&chmod +x $sh&&./$sh -c https://disk.yandex.ru/d/HDgvq-iMbduqag -z;rm -f $sh```
 <br/>
 
 <br/>
