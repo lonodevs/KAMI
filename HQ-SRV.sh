@@ -23,6 +23,7 @@ cat <<EOF > /etc/resolv.conf
 nameserver 8.8.8.8
 nameserver 77.88.8.8
 EOF
+systemctl restart network
 
 #Создание пользователя sshuser и настройка sshd конфига
 useradd sshuser -u 1010
