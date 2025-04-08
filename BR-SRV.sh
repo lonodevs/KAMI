@@ -17,8 +17,9 @@ cat <<EOF > /etc/net/ifaces/ens18/ipv4address
 192.168.0.30/27
 EOF
 
+
 timedatectl set-timezone Europe/Samara
-timedatectl status
+systemctl restart network
 
 #Создание пользователя sshuser и настройка sshd конфига
 useradd sshuser -u 1010
