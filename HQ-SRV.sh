@@ -55,7 +55,7 @@ Authorized access only
 ----------------------
 EOF
 systemctl restart sshd
-
+echo "AllowUsers sshuser" | tee -a /etc/openssh/sshd_config
 
 if [ "$HOSTNAME" = HQ-SRV.au-team.irpo ]; then
 useradd sshuser -u 1010
