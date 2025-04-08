@@ -28,7 +28,6 @@ interface int1
 port te1
   service-instance te1/int1
     encapsulation untagged
-    rewrite pop 1
 
 #ОБЪЕДИНЕНИЕ ФИЗ И ЛОГ ПОРТА
 interface int1
