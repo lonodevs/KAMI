@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Переименование виртуалки
-hostnamectl set-hostname BR-SRV.au-team.ipro; exec bash
+hostnamectl set-hostname BR-SRV.au-team.ipro; 
 
 #Настройка интерфейсов и времени
 cat <<EOF > /etc/net/ifaces/ens18/options
