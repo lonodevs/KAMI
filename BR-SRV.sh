@@ -43,7 +43,7 @@ sed -i 's/^#MaxAuthTries 6$/MaxAuthTries 2/' "$CONFIG_FILE"
 sed -i 's/^#PasswordAuthentication yes$/PasswordAuthentication yes/' "$CONFIG_FILE"  
 
 touch "$CONFIG_FILE"/bannermotd
-cat <<EOF"$CONFIG_FILE"/bannermotd
+cat <<EOF "$CONFIG_FILE"/bannermotd
 
 ----------------------
 Authorized access only
