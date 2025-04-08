@@ -44,6 +44,8 @@ firewall-cmd --reload
 systemctl restart firewalld
 systemctl restart network
 
+
+#Создание пользователя sshuser и настройка sshd конфига
 useradd sshuser -u 1010
 echo "sshuser:P@ssw0rd" | chpasswd
 usermod -aG wheel sshuser
@@ -63,7 +65,7 @@ cat <<EOF /etc/openssh/bannermotd
 Authorized access only
 ----------------------
 EOF
-
+systemctl restart sshd
 sed -i 's/#Banner none/Banner /etc/openssh/bannermotd/Ig' /etc/openssh/sshd_config
 echo "AllowUsers sshuser" | tee -a /etc/openssh/sshd_config
 
