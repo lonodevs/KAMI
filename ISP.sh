@@ -71,3 +71,5 @@ EOF
 
 echo "AllowUsers sshuser" | tee -a /etc/openssh/sshd_config
 systemctl restart sshd
+
+hostnamectl set-hostname ISP; exec bash
