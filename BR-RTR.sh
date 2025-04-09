@@ -63,6 +63,5 @@ int int0
 ip nat pool NAT_POOL 192.168.0.1-192.168.0.30
 ip nat source dynamic inside-to-outside pool NAT_POOL overload interface int0
 
-#СТАТИЧЕСКИЙ ПРОБРОС
 ip nat source static tcp 192.168.0.1 80 192.168.0.30 8080
 ip nat source static tcp 192.168.0.1 2024 192.168.0.30 2024
