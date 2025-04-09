@@ -8,7 +8,7 @@ ntp timezone utc+4
 
 interface int0
   description "to isp"
-  ip address 172.16.5.2/28
+  ip address 172.16.5.14/28
 
 
 port te0
@@ -45,7 +45,7 @@ role admin
 int tunnel.0
 ip add 172.16.0.2/30
 ip mtu 1400
-ip tunnel 172.16.5.2 172.16.4.2 mode gre
+ip tunnel 172.16.5.14 172.16.4.14 mode gre
 
 
 router ospf 1
@@ -55,6 +55,9 @@ router ospf 1
   passive-interface default
   no passive-interface tunnel.0
 
+int tunnel.0
+ip ospf authetication message-digest
+ip ospf message-digest-key 1 md5 P@ssw0rd
 
 int int1
   ip nat inside

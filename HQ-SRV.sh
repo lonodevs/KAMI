@@ -39,22 +39,24 @@ EOF
 CONFIG_FILE="/etc/openssh/sshd_config"  
 
 # Изменить SSH-порт с 22 на 2024  
-sed -i 's/^#Port 22$/Port 2024/' "$CONFIG_FILE"  
+awk -i inplace '/^#Port 22$/ { gsub(/22/, "2024"); $0 = "Port 2024" } { print }' "$CONFIG_FILE"  
 
 # Уменьшить MaxAuthTries с 6 до 2  
-sed -i 's/^#MaxAuthTries 6$/MaxAuthTries 2/' "$CONFIG_FILE"  
+awk -i inplace '/^#MaxAuthTries 6$/ { gsub(/6/, "2"); $0 = "MaxAuthTries 2" } { print }' "$CONFIG_FILE"  
 
-# Разрешить аутентификацию по паролю 
-sed -i 's/^#PasswordAuthentication yes$/PasswordAuthentication yes/' "$CONFIG_FILE"  
+# Разрешить аутентификацию по паролю  
+awk -i inplace '/^#PasswordAuthentication yes$/ { sub(/^#/, ""); print; next } { print }' "$CONFIG_FILE"  
 
-touch "$CONFIG_FILE"/bannermotd
-cat <<EOF "$CONFIG_FILE"/bannermotd
 
-----------------------
-Authorized access only
-----------------------
-EOF
-systemctl restart sshd
+touch "$CONFIG_FILE"/bannermotd  
+cat <<EOF > "$CONFIG_FILE"/bannermotd  
+
+----------------------  
+Authorized access only  
+----------------------  
+EOF  
+
+systemctl restart sshd  
 echo "AllowUsers sshuser" | tee -a /etc/openssh/sshd_config
 
 if [ "$HOSTNAME" = HQ-SRV.au-team.irpo ]; then
@@ -65,7 +67,7 @@ cat > /etc/dnsmasq.conf <<EOF
 no-resolv
 no-poll
 no-hosts
-listen-address=192.168.1.10
+listen-address=192.168.1.62
 
 server=77.88.8.8
 server=195.208.4.1
@@ -77,11 +79,11 @@ all-servers
 no-negcache
 
 host-record=hq-rtr.au-team.irpo,192.168.1.1
-host-record=hq-srv.au-team.irpo,192.168.1.10
-host-record=hq-cli.au-team.irpo,192.168.2.10
+host-record=hq-srv.au-team.irpo,192.168.1.62
+host-record=hq-cli.au-team.irpo,192.168.1.65
 
-address=/br-rtr.au-team.irpo/192.168.3.1
-address=/br-srv.au-team.irpo/192.168.3.10
+address=/br-rtr.au-team.irpo/192.168.0.1
+address=/br-srv.au-team.irpo/192.168.0.30
 
 cname=moodle.au-team.irpo,hq-rtr.au-team.irpo
 cname=wiki.au-team.irpo,hq-rtr.au-team.irpo
@@ -92,7 +94,7 @@ cat <<EOF > /etc/chrony.conf
 # Use public servers from the pool.ntp.org project.
 # Please consider joining the pool (https://www.pool.ntp.org/join.html).
 #pool pool.ntp.org iburst
-server 192.168.3.10 iburst prefer
+server 192.168.1.62 iburst prefer
 # Record the rate at which the system clock gains/losses time.
 driftfile /var/lib/chrony/drift
 
@@ -197,7 +199,7 @@ mkdir -p /raid5/nfs
 chmod 766 /raid5/nfs
 
 # Configure exports
-echo "/raid5/nfs 192.168.2.0/28(rw,no_root_squash,no_subtree_check)" > /etc/exports
+echo "/raid5/nfs 192.168.1.0/28(rw,no_root_squash,no_subtree_check)" > /etc/exports
 
 # Apply NFS settings
 exportfs -arv
@@ -205,7 +207,7 @@ systemctl enable --now nfs-server
 
 echo "HQ-SRV configuration complete"
 echo "RAID 5 created: /dev/md0 mounted at /raid5"
-echo "NFS share: /raid5/nfs available to 192.168.2.0/28"
+echo "NFS share: /raid5/nfs available to 192.168.1.0/28"
 
 #Установка Moodle
 #apt-get install -y moodle moodle-apache2 moodle-base moodle-local-mysql phpMyAdmin

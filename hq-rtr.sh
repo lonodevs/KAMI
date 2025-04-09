@@ -2,12 +2,13 @@
 ena
 conf t
 hostname hq-rtr
+ip domain-name au-team.irpo
 
 ntp timezone utc+4
 
 interface int0
   description "to isp"
-  ip address 172.16.4.2/28
+  ip address 172.16.4.14/28
 
 
 port te0
@@ -23,21 +24,28 @@ interface int1
 interface int2
   description "to hq-cli"
   ip address 192.168.1.65/28
+  interface int3
+  description "to manage"
+  ip address 192.168.1.81/29
 
 
 port te1
   service-instance te1/int1
-    encapsulation dot1q 100
+    encapsulation dot1q 100 exact
     rewrite pop 1
   service-instance te1/int2
-    encapsulation dot1q 200
+    encapsulation dot1q 200 exact
     rewrite pop 1
-
+ service-instance te1/int2
+    encapsulation dot1q 999 exact
+    rewrite pop 1
 
 interface int1
   connect port te1 service-instance te1/int1
 interface int2
   connect port te1 service-instance te1/int2
+interface int3
+  connect port te1 service-instance te1/int3
 
 
 ip route 0.0.0.0 0.0.0.0 172.16.4.1
@@ -58,9 +66,14 @@ router ospf 1
   router-id 1.1.1.1
   network 172.16.0.0/30 area 0
   network 192.168.1.0/26 area 0
-  network 192.168.1.0/28 area 0
+  network 192.168.1.64/28 area 0
+  network 192.168.1.80/29 area 0
   passive-interface default
   no passive-interface tunnel.0
+
+int tunnel.0
+ip ospf authetication message-digest
+ip ospf message-digest-key 1 md5 P@ssw0rd
 
 int int1
   ip nat inside
@@ -69,7 +82,7 @@ int int2
 int int0
   ip nat outside
 
-ip nat pool NAT_POOL 192.168.1.1-192.168.1.62,192.168.1.65-192.168.1.78
+ip nat pool NAT_POOL 192.168.1.1-192.168.1.62,192.168.1.65-192.168.1.78,192.168.1.81-192.168.1.87
 ip nat source dynamic inside-to-outside pool NAT_POOL overload interface int0
 
 

@@ -44,22 +44,23 @@ EOF
 CONFIG_FILE="/etc/openssh/sshd_config"  
 
 # Изменить SSH-порт с 22 на 2024  
-sed -i 's/^#Port 22$/Port 2024/' "$CONFIG_FILE"  
+awk -i inplace '/^#Port 22$/ { gsub(/22/, "2024"); $0 = "Port 2024" } { print }' "$CONFIG_FILE"  
 
 # Уменьшить MaxAuthTries с 6 до 2  
-sed -i 's/^#MaxAuthTries 6$/MaxAuthTries 2/' "$CONFIG_FILE"  
+awk -i inplace '/^#MaxAuthTries 6$/ { gsub(/6/, "2"); $0 = "MaxAuthTries 2" } { print }' "$CONFIG_FILE"  
 
-# Разрешить аутентификацию по паролю 
-sed -i 's/^#PasswordAuthentication yes$/PasswordAuthentication yes/' "$CONFIG_FILE"  
+# Разрешить аутентификацию по паролю  
+awk -i inplace '/^#PasswordAuthentication yes$/ { sub(/^#/, ""); print; next } { print }' "$CONFIG_FILE"  
 
-touch "$CONFIG_FILE"/bannermotd
-cat <<EOF "$CONFIG_FILE"/bannermotd
+touch "$CONFIG_FILE"/bannermotd  
+cat <<EOF > "$CONFIG_FILE"/bannermotd  
 
-----------------------
-Authorized access only
-----------------------
-EOF
-systemctl restart sshd
+----------------------  
+Authorized access only  
+----------------------  
+EOF  
+
+systemctl restart sshd  
 
 #Создание NTP
 apt-get install chrony -y 
@@ -97,12 +98,12 @@ cat <<EOF >> /etc/ansible/inventory.yml
     Servers:
       hosts:
         hq-srv:
-          ansible_host: 192.168.100.62
+          ansible_host: 192.168.1.62
           ansible_port: 2024
     Clients:
       hosts:
         hq-cli:
-          ansible_host: 192.168.200.14
+          ansible_host: 192.168.1.65
           ansible_port: 2024
 EOF
 
