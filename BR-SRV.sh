@@ -98,12 +98,12 @@ cat <<EOF >> /etc/ansible/inventory.yml
     Servers:
       hosts:
         hq-srv:
-          ansible_host: 192.168.100.62
+          ansible_host: 192.168.1.62
           ansible_port: 2024
     Clients:
       hosts:
         hq-cli:
-          ansible_host: 192.168.200.14
+          ansible_host: 192.168.1.65
           ansible_port: 2024
 EOF
 
