@@ -66,9 +66,14 @@ router ospf 1
   router-id 1.1.1.1
   network 172.16.0.0/30 area 0
   network 192.168.1.0/26 area 0
-  network 192.168.1.0/28 area 0
+  network 192.168.1.64/28 area 0
+  network 192.168.1.80/29 area 0
   passive-interface default
   no passive-interface tunnel.0
+
+int tunnel.0
+ip ospf authetication message-digest
+ip ospf message-digest-key 1 md5 P@ssw0rd
 
 int int1
   ip nat inside
