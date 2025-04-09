@@ -17,6 +17,11 @@ cat <<EOF > /etc/net/ifaces/ens18/ipv4address
 192.168.0.30/27
 EOF
 
+touch /etc/net/ifaces/ens18/ipv4address
+cat <<EOF > /etc/net/ifaces/ens18/ipv4route
+default via 192.168.0.1
+EOF
+
 cat <<EOF > /etc/resolv.conf
 nameserver 8.8.8.8
 nameserver 77.88.8.8
