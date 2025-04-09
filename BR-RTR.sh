@@ -1,7 +1,7 @@
 
 ena
 conf t
-hostname BR-RTR
+hostname br-srv
 
 ntp timezone utc+4
 
