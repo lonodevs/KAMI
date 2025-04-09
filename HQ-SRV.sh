@@ -59,7 +59,6 @@ EOF
 systemctl restart sshd  
 echo "AllowUsers sshuser" | tee -a /etc/openssh/sshd_config
 
-if [ "$HOSTNAME" = HQ-SRV.au-team.irpo ]; then
 useradd sshuser -u 1010
 
 apt-get update && apt-get install -y dnsmasq
@@ -139,9 +138,7 @@ logdir /var/log/chrony
 # Select which information is logged.
 #log measurements statistics tracking
 EOF
-else
-echo "this is not HQ-SRV" 
-fi
+
 
 
 # Identify available disks (assuming 3 disks are available)
