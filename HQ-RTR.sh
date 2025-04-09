@@ -1,7 +1,7 @@
 
 ena
 conf t
-hostname HQ-RTR
+hostname hq-rtr.au-team.ipro
 
 ntp timezone utc+4
 
