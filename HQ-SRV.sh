@@ -67,7 +67,7 @@ cat > /etc/dnsmasq.conf <<EOF
 no-resolv
 no-poll
 no-hosts
-listen-address=192.168.1.10
+listen-address=192.168.1.62
 
 server=77.88.8.8
 server=195.208.4.1
@@ -79,11 +79,11 @@ all-servers
 no-negcache
 
 host-record=hq-rtr.au-team.irpo,192.168.1.1
-host-record=hq-srv.au-team.irpo,192.168.1.10
-host-record=hq-cli.au-team.irpo,192.168.2.10
+host-record=hq-srv.au-team.irpo,192.168.1.62
+host-record=hq-cli.au-team.irpo,192.168.1.65
 
-address=/br-rtr.au-team.irpo/192.168.3.1
-address=/br-srv.au-team.irpo/192.168.3.10
+address=/br-rtr.au-team.irpo/192.168.0.1
+address=/br-srv.au-team.irpo/192.168.0.30
 
 cname=moodle.au-team.irpo,hq-rtr.au-team.irpo
 cname=wiki.au-team.irpo,hq-rtr.au-team.irpo
@@ -94,7 +94,7 @@ cat <<EOF > /etc/chrony.conf
 # Use public servers from the pool.ntp.org project.
 # Please consider joining the pool (https://www.pool.ntp.org/join.html).
 #pool pool.ntp.org iburst
-server 192.168.3.10 iburst prefer
+server 192.168.1.62 iburst prefer
 # Record the rate at which the system clock gains/losses time.
 driftfile /var/lib/chrony/drift
 
@@ -199,7 +199,7 @@ mkdir -p /raid5/nfs
 chmod 766 /raid5/nfs
 
 # Configure exports
-echo "/raid5/nfs 192.168.2.0/28(rw,no_root_squash,no_subtree_check)" > /etc/exports
+echo "/raid5/nfs 192.168.1.0/28(rw,no_root_squash,no_subtree_check)" > /etc/exports
 
 # Apply NFS settings
 exportfs -arv
@@ -207,7 +207,7 @@ systemctl enable --now nfs-server
 
 echo "HQ-SRV configuration complete"
 echo "RAID 5 created: /dev/md0 mounted at /raid5"
-echo "NFS share: /raid5/nfs available to 192.168.2.0/28"
+echo "NFS share: /raid5/nfs available to 192.168.1.0/28"
 
 #Установка Moodle
 #apt-get install -y moodle moodle-apache2 moodle-base moodle-local-mysql phpMyAdmin
