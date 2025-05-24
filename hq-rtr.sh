@@ -75,11 +75,11 @@ int tunnel.0
 ip ospf authetication message-digest
 ip ospf message-digest-key 1 md5 P@ssw0rd
 
+int int0
+  ip nat inside
 int int1
   ip nat inside
 int int2
-  ip nat inside
-int int0
   ip nat outside
 
 ip nat pool NAT_POOL 192.168.1.1-192.168.1.62,192.168.1.65-192.168.1.78,192.168.1.81-192.168.1.87
