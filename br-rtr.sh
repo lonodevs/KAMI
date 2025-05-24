@@ -2,6 +2,8 @@
 ena
 conf t
 hostname br-srv
+ip domain-name au-team.irpo
+
 
 ntp timezone utc+4
 
