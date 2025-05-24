@@ -20,6 +20,9 @@ sed -i 's/^#Port 22$/Port 2024/' "$CONFIG_FILE"
 # Уменьшить MaxAuthTries с 6 до 2  
 sed -i 's/^#MaxAuthTries 6$/MaxAuthTries 2/' "$CONFIG_FILE"  
 
+
+echo "Allow users = sshuser" >> "$CONFIG_FILE" 
+
 # Разрешить аутентификацию по паролю 
 sed -i 's/^#PasswordAuthentication yes$/PasswordAuthentication yes/' "$CONFIG_FILE"  
 
