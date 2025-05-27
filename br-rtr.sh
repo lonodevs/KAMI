@@ -1,7 +1,7 @@
 
 ena
 conf t
-hostname br-srv
+hostname br-rtr
 ip domain-name au-team.irpo
 
 
