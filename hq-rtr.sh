@@ -60,7 +60,8 @@ int tunnel.0
 ip add 172.16.0.1/30
 ip mtu 1400
 ip tunnel 172.16.4.2 172.16.5.2 mode gre
-
+ip ospf authetication message-digest
+ip ospf message-digest-key 1 md5 P@ssw0rd
 
 router ospf 1
   router-id 1.1.1.1
@@ -71,9 +72,6 @@ router ospf 1
   passive-interface default
   no passive-interface tunnel.0
 
-int tunnel.0
-ip ospf authetication message-digest
-ip ospf message-digest-key 1 md5 P@ssw0rd
 
 int int0
   ip nat inside
