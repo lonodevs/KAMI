@@ -66,14 +66,13 @@ awk -i inplace '/^#PasswordAuthentication yes$/ { sub(/^#/, ""); print; next } {
 
  echo "Allow users = sshuser" >> "$CONFIG_FILE" 
 
-
 touch /etc/openssh/bannermotd
-cat <<EOF >  /etc/openssh/bannermotd
+cat <<EOF > /etc/openssh/bannermotd
 
 ----------------------  
 Authorized access only  
 ----------------------  
-EOF  
+EOF
 
 echo "AllowUsers sshuser" | tee -a /etc/openssh/sshd_config
 systemctl restart sshd
