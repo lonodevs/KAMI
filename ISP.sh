@@ -64,7 +64,6 @@ awk -i inplace '/^#MaxAuthTries 6$/ { gsub(/6/, "2"); $0 = "MaxAuthTries 2" } { 
 # Разрешить аутентификацию по паролю  
 awk -i inplace '/^#PasswordAuthentication yes$/ { sub(/^#/, ""); print; next } { print }' "$CONFIG_FILE" 
 
- echo "Allow users = sshuser" >> "$CONFIG_FILE" 
 
 touch /etc/openssh/bannermotd
 cat <<EOF > /etc/openssh/bannermotd
