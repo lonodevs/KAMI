@@ -22,6 +22,7 @@ connect port te1 service-instance te1/int1
 interface int2
 description "to hq-cli"
 ip address 192.168.1.65/28
+port te1
 service-instance te1/int2
 encapsulation dot1q 200 exact
 rewrite pop 1
@@ -30,6 +31,7 @@ connect port te1 service-instance te1/int2
 interface int3
 description "to manage"
 ip address 192.168.1.81/29
+port te1
 service-instance te1/int3
 encapsulation dot1q 999 exact
 rewrite pop 1
