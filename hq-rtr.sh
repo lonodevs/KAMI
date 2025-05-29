@@ -72,7 +72,9 @@ ip nat outside
 exit
 ip nat pool NAT_POOL 192.168.1.1-192.168.1.62,192.168.1.65-192.168.1.78,192.168.1.81-192.168.1.87
 ip nat source dynamic inside-to-outside pool NAT_POOL overload interface int0
-ip pool cli_pool 1 192.168.1.66-192.168.1.78
+ip pool cli_pool 1 
+range 192.168.1.66-192.168.1.78
+exit
 dhcp-server 1
 pool cli_pool 1
 mask 255.255.255.240
