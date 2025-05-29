@@ -20,7 +20,6 @@ interface int1
 connect port te1 service-instance te1/int1
 exit
 ip route 0.0.0.0 0.0.0.0 172.16.5.1
-exit
 username net_admin
 password P@ssw0rd
 role admin
