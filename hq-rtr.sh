@@ -29,7 +29,7 @@ rewrite pop 1
 interface int2
 connect port te1 service-instance te1/int2
 interface int3
-description "to manage"
+description "to management"
 ip address 192.168.1.81/29
 port te1
 service-instance te1/int3
@@ -38,7 +38,7 @@ rewrite pop 1
 interface int3
 connect port te1 service-instance te1/int3
 exit
-ip route 0.0.0.0 0.0.0.0 172.16.4.1
+ip route 0.0.0.0/0 172.16.4.1
 username net_admin
 password P@ssw0rd
 role admin
