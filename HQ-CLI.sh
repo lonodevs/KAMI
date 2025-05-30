@@ -1,6 +1,6 @@
 #!/bin/bash
 
-hostnamectl set-hostname hq-cli.au-team.ipro;
+hostnamectl set-hostname hq-cli.au-team.irpo;
 
 #Создание пользователя sshuser и настройка sshd конфига
 useradd sshuser -u 1010
