@@ -21,7 +21,6 @@ EOF
 
 cat <<EOF > /etc/resolv.conf
 nameserver 8.8.8.8
-nameserver 77.88.8.8
 EOF
 systemctl restart network
 
@@ -62,7 +61,6 @@ EOF
 systemctl restart sshd  
 echo "AllowUsers sshuser" | tee -a /etc/openssh/sshd_config
 
-useradd sshuser -u 1010
 
 apt-get update && apt-get install -y dnsmasq
 cat > /etc/dnsmasq.conf <<EOF
