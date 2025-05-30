@@ -63,7 +63,7 @@ ip ospf message-digest-key 1 md5 P@ssw0rd
 exit
 int int1
 ip nat inside
-int int1
+int int2
 ip nat inside
 int int3
 ip nat inside
