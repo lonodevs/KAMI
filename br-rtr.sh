@@ -48,3 +48,5 @@ exit
 ip nat pool NAT_POOL 192.168.0.1-192.168.0.30
 ip nat source dynamic inside-to-outside pool NAT_POOL overload interface int0
 ntp timezone utc+4
+ip nat source static tcp 192.168.200.2 8080 172.16.5.14 80
+ip nat source static tcp 192.168.200.2 2024 172.16.5.14 2024
