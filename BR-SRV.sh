@@ -83,6 +83,8 @@ rm -rf /var/lib/samba
 rm -rf /var/cache/samba
 mkdir -p /var/lib/samba/sysvol
 samba-tool domain provision --realm=au-team.irpo --domain=au-team --adminpass='P@ssw0rd' --dns-backend=SAMBA_INTERNAL --server-role=dc --use-rfc2307
+systemctl restart samba
+systemctl enable --now samba
 
 #Настройка Ansible
 apt-get install -y ansible sshpass
