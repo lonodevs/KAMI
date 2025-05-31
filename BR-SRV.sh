@@ -89,7 +89,7 @@ samba-tool domain info 127.0.0.1
 
 #Настройка Ansible
 apt-get install -y ansible sshpass
-cat <<EOF >> /etc/ansible/hosts
+cat > /etc/ansible/hosts <<EOF
 HQ-RTR ansible_host=192.168.1.1 ansible_user=net_admin ansible_password=P@$$word ansible_connection=network_cli ansible_network_os=ios
 BR-RTR ansible_host=192.168.0.1 ansible_user=net_admin ansible_password=P@$$word ansible_connection=network_cli ansible_network_os=ios
 HQ-SRV ansible_host=192.168.1.62 ansible_user=sshuser ansible_password=P@ssw0rd ansible_ssh_port=2024
