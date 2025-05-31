@@ -35,4 +35,13 @@ Authorized access only
 ----------------------
 EOF
 systemctl restart sshd
-
+apt-get update && apt-get install -y gpupdate
+gpupdate-setup enable
+apt-get install -y admc
+apt-get install -y gpui
+apt-get install -y libnss-role
+control libnss-role
+roleadd hq wheel
+rolelst
+apt-get install -y admx-*
+admx-msi-setup
