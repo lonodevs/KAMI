@@ -99,7 +99,7 @@ amdx-msi-setup
 #Настройка Ansible
 apt-get install -y ansible sshpass
 sed -i 's/^#inventory      = \/etc\/ansible\/hosts/inventory      = \/etc\/ansible\/hosts/' /etc/ansible/ansible.cfg 
-echo -e "\nhost_key_checking = False" | sudo tee -a /etc/ansible/ansible.cfg
+echo -e "\host_key_checking = False" | sudo tee -a /etc/ansible/ansible.cfg
 cat > /etc/ansible/hosts <<EOF
 HQ-RTR ansible_host=192.168.1.1 ansible_user=net_admin ansible_password=P@$$word ansible_connection=network_cli ansible_network_os=ios
 BR-RTR ansible_host=192.168.0.1 ansible_user=net_admin ansible_password=P@$$word ansible_connection=network_cli ansible_network_os=ios
