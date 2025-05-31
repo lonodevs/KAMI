@@ -86,6 +86,13 @@ samba-tool domain provision --realm=au-team.irpo --domain=au-team --adminpass='P
 systemctl restart samba
 systemctl enable --now samba
 samba-tool domain info 127.0.0.1
+samba-tool computer list
+samba-tool group add hq
+for i in {1..5}; do
+samba-tool user add user$i-hq P@ssw0rd;
+samba-tool user setexpiry user$i-hq --noexpiry;
+samba-tool group addmembers "hq" user$i-hq;
+done
 
 #Настройка Ansible
 apt-get install -y ansible sshpass
