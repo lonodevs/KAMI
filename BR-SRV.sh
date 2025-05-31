@@ -93,6 +93,8 @@ samba-tool user add user$i-hq P@ssw0rd;
 samba-tool user setexpiry user$i-hq --noexpiry;
 samba-tool group addmembers "hq" user$i-hq;
 done
+apt-get install -y admx-*
+amdx-msi-setup
 
 #Настройка Ansible
 apt-get install -y ansible sshpass
