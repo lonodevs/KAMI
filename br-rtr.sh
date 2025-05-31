@@ -51,4 +51,5 @@ ntp timezone utc+4
 ip nat source static tcp 192.168.200.2 8080 172.16.5.14 80
 ip nat source static tcp 192.168.200.2 2024 172.16.5.14 2024
 security none
+exit
 wr mem
