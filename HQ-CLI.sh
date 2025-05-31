@@ -13,7 +13,7 @@ sshuser ALL=(ALL) NOPASSWD:ALL
 EOF
 
 
-CONFIG_FILE="/etc/ssh/sshd_config"  
+CONFIG_FILE="/etc/openssh/sshd_config"  
 
 # Изменить SSH-порт с 22 на 2024  
 sed -i 's/^#Port 22$/Port 2024/' "$CONFIG_FILE"  
