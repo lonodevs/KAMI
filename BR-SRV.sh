@@ -90,43 +90,17 @@ samba-tool domain info 127.0.0.1
 #Настройка Ansible
 apt-get install -y ansible sshpass
 
-sed -i 's/#inventory = /etc/ansible/hosts / #inventory = ./inventory.yml/Ig /etc/ansible/ansible.cfg
-sed -i 's/#host_key_checking = True/host_key_checking = False/Ig /etc/ansible/ansible.cfg
 
-cat <<EOF >> /etc/ansible/inventory.yml
- all:
-  children:
-    Networking:
-      hosts:
-        hq-rtr:
-        br-rtr:
-    Servers:
-      hosts:
-        hq-srv:
-          ansible_host: 192.168.1.62
-          ansible_port: 2024
-    Clients:
-      hosts:
-        hq-cli:
-          ansible_host: 192.168.1.65
-          ansible_port: 2024
+cat <<EOF >> /etc/ansible/hosts
+HQ-RTR ansible_host=192.168.1.1 ansible_user=net_admin ansible_password=P@$$word ansible_connection=network_cli ansible_network_os=ios
+BR-RTR ansible_host=192.168.0.1 ansible_user=net_admin ansible_password=P@$$word ansible_connection=network_cli ansible_network_os=ios
+HQ-SRV ansible_host=192.168.1.62 ansible_user=sshuser ansible_password=P@ssw0rd ansible_ssh_port=2024
+HQ-CLI ansilbe_host=192.168.1.66 ansible_user=sshuser ansible_password=P@ssw0rd ansible_ssh_port=2024
+
+[all:vars]
+ansible_python_interpreter=/usr/bin/python3
 EOF
-
-cd /etc/ansible
-mkdir group_vars
-touch group_vars/{all.yml,Networking.yml}
-
-cat <<EOF >> /etc/ansible/group_vars/all.yml
-ansible_ssh_user: sshuser
-ansible_ssh_pass: P@ssw0rd
-ansible_python_interpreter: /usr/bin/python3
-EOF
-
-cat <<EOF >> /etc/ansible/group_vars/Networking.yml
-
-ansible_connection: network_cli
-ansible_network_os: ios
-EOF
+ansible -m ping all
 
 #Установка Docker 
 systemctl disable —now ahttpd
