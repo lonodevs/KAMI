@@ -40,7 +40,7 @@ connect port te1 service-instance te1/int3
 exit
 ip route 0.0.0.0/0 172.16.4.1
 username net_admin
-password P@ssw0rd
+password P@$$word
 role admin
 exit
 int tunnel.0
@@ -86,3 +86,5 @@ dhcp-server 1
 exit
 ntp timezone utc+4
 ip nat source static tcp 192.168.100.2 2024 172.16.4.14 2024
+security none
+wr mem
