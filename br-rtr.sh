@@ -21,7 +21,7 @@ connect port te1 service-instance te1/int1
 exit
 ip route 0.0.0.0/0 172.16.5.1
 username net_admin
-password P@ssw0rd
+password P@$$word
 role admin
 exit
 int tunnel.0
@@ -50,3 +50,5 @@ ip nat source dynamic inside-to-outside pool NAT_POOL overload interface int0
 ntp timezone utc+4
 ip nat source static tcp 192.168.200.2 8080 172.16.5.14 80
 ip nat source static tcp 192.168.200.2 2024 172.16.5.14 2024
+security none
+wr mem
