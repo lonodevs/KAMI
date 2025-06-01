@@ -57,32 +57,7 @@ systemctl restart sshd
 echo "AllowUsers sshuser" | tee -a /etc/openssh/sshd_config
 
 
-apt-get update && apt-get install -y dnsmasq
-cat > /etc/dnsmasq.conf <<EOF
-no-resolv
-no-poll
-no-hosts
-listen-address=192.168.1.62
-
-server=77.88.8.8
-server=8.8.8.8
-
-cache-size=1000
-all-servers
-no-negcache
-
-host-record=hq-rtr.au-team.irpo,192.168.1.1
-host-record=hq-srv.au-team.irpo,192.168.1.62
-host-record=hq-cli.au-team.irpo,192.168.1.66
-
-address=/br-rtr.au-team.irpo/192.168.0.1
-address=/br-srv.au-team.irpo/192.168.0.30
-
-cname=moodle.au-team.irpo,hq-rtr.au-team.irpo
-cname=wiki.au-team.irpo,hq-rtr.au-team.irpo
-EOF
-systemctl restart dnsmasq
-apt-get install -y chrony
+apt-get install -y chrony dnsmasq
 cat <<EOF > /etc/chrony.conf
 # Use public servers from the pool.ntp.org project.
 # Please consider joining the pool (https://www.pool.ntp.org/join.html).
@@ -132,6 +107,32 @@ logdir /var/log/chrony
 # Select which information is logged.
 #log measurements statistics tracking
 EOF
+
+apt-get update && apt-get install -y dnsmasq
+cat > /etc/dnsmasq.conf <<EOF
+no-resolv
+no-poll
+no-hosts
+listen-address=192.168.1.62
+
+server=77.88.8.8
+server=8.8.8.8
+
+cache-size=1000
+all-servers
+no-negcache
+
+host-record=hq-rtr.au-team.irpo,192.168.1.1
+host-record=hq-srv.au-team.irpo,192.168.1.62
+host-record=hq-cli.au-team.irpo,192.168.1.66
+
+address=/br-rtr.au-team.irpo/192.168.0.1
+address=/br-srv.au-team.irpo/192.168.0.30
+
+cname=moodle.au-team.irpo,hq-rtr.au-team.irpo
+cname=wiki.au-team.irpo,hq-rtr.au-team.irpo
+EOF
+systemctl restart dnsmasq
 
 grep -E "Port|MaxAuthTries|PasswordAuthentication|PubkeyAuthentication" "$CONFIG_FILE"
 
