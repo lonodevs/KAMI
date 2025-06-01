@@ -135,5 +135,6 @@ EOF
 systemctl restart dnsmasq
 
 grep -E "Port|MaxAuthTries|PasswordAuthentication|PubkeyAuthentication" "$CONFIG_FILE"
+cat /etc/dnsmasq.conf
 
 
