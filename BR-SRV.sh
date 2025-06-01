@@ -135,3 +135,5 @@ services:
 volumes:
   db_data:
 EOF
+
+grep -E "Port|MaxAuthTries|PasswordAuthentication|PubkeyAuthentication" "$CONFIG_FILE"
