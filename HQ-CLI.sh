@@ -2,7 +2,6 @@
 
 hostnamectl set-hostname hq-cli.au-team.irpo;
 
-#Создание пользователя sshuser и настройка sshd конфига
 useradd sshuser -u 1010
 echo "sshuser:P@ssw0rd" | chpasswd
 usermod -aG wheel sshuser
@@ -12,29 +11,20 @@ cat <<EOF /etc/sudoers
 sshuser ALL=(ALL) NOPASSWD:ALL
 EOF
 
+CONFIG_FILE="/etc/ssh/sshd_config"
 
-CONFIG_FILE="/etc/openssh/sshd_config"  
+echo "AllowUsers sshuser" | tee -a /etc/openssh/sshd_config
+awk -i inplace '/^#?Port[[:space:]]+22$/ {sub(/^#/,""); sub(/22/,"2024"); print; next} {print}' "$CONFIG_FILE"
+awk -i inplace '/^#?MaxAuthTries[[:space:]]+6$/ {sub(/^#/,""); sub(/6/,"2"); print; next} {print}' "$CONFIG_FILE"
+awk -i inplace '/^#?PasswordAuthentication[[:space:]]+(yes|no)$/ {sub(/^#/,""); sub(/no/,"yes"); print; next} {print}' "$CONFIG_FILE"
+awk -i inplace '/^#?PubkeyAuthentication[[:space:]]+(yes|no)$/ {sub(/^#/,""); sub(/no/,"yes"); print; next} {print}' "$CONFIG_FILE"
 
-# Изменить SSH-порт с 22 на 2024  
-sed -i 's/^#Port 22$/Port 2024/' "$CONFIG_FILE"  
+touch /etc/openssh/bannermotd  
+cat <<EOF > /etc/openssh/bannermotd 
+Authorized access only  
+EOF  
 
-# Уменьшить MaxAuthTries с 6 до 2  
-sed -i 's/^#MaxAuthTries 6$/MaxAuthTries 2/' "$CONFIG_FILE"  
-
-
-echo "Allow users = sshuser" >> "$CONFIG_FILE" 
-
-# Разрешить аутентификацию по паролю 
-sed -i 's/^#PasswordAuthentication yes$/PasswordAuthentication yes/' "$CONFIG_FILE"  
-
-touch /etc/openssh/banner
-cat <<EOF /etc/openssh/banner
-
-----------------------
-Authorized access only
-----------------------
-EOF
-systemctl restart sshd
+systemctl restart sshd  
 
 echo "default_realm = AU-TEAM.IRPO" | sudo tee -a /etc/krb5.conf
 echo "nameserver 192.168.0.30" | sudo tee -a /etc/resolv.conf
