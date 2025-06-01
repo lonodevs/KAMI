@@ -11,7 +11,7 @@ cat <<EOF /etc/sudoers
 sshuser ALL=(ALL) NOPASSWD:ALL
 EOF
 
-CONFIG_FILE="/etc/ssh/sshd_config"
+CONFIG_FILE="/etc/openssh/sshd_config"
 
 echo "AllowUsers sshuser" | tee -a /etc/openssh/sshd_config
 awk -i inplace '/^#?Port[[:space:]]+22$/ {sub(/^#/,""); sub(/22/,"2024"); print; next} {print}' "$CONFIG_FILE"
