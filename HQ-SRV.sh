@@ -50,8 +50,6 @@ EOF
 
 systemctl restart sshd  
 
-
-
 apt-get install -y chrony dnsmasq
 cat <<EOF > /etc/chrony.conf
 # Use public servers from the pool.ntp.org project.
