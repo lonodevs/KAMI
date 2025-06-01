@@ -49,13 +49,15 @@ awk -i inplace '/^#Port 22$/ { gsub(/22/, "2024"); $0 = "Port 2024" } { print }'
 # Уменьшить MaxAuthTries с 6 до 2  
 awk -i inplace '/^#MaxAuthTries 6$/ { gsub(/6/, "2"); $0 = "MaxAuthTries 2" } { print }' "$CONFIG_FILE"  
 
-echo "Allow users = sshuser" >> "$CONFIG_FILE" 
+echo "AllowUsers  sshuser" >> "$CONFIG_FILE" 
 
 # Разрешить аутентификацию по паролю  
 awk -i inplace '/^#PasswordAuthentication yes$/ { sub(/^#/, ""); print; next } { print }' "$CONFIG_FILE"  
+sed -i 's/^#PubkeyAuthentication yes/PubkeyAuthentication yes/' /etc/ssh/sshd_config  
 
-touch /etc/openssh/bannermotd
-cat <<EOF > /etc/openssh/bannermotd
+
+touch /etc/openssh/banner
+cat <<EOF > /etc/openssh/banner
 
 ----------------------  
 Authorized access only  
@@ -99,7 +101,7 @@ amdx-msi-setup
 #Настройка Ansible
 apt-get install -y ansible sshpass
 sed -i 's/^#inventory      = \/etc\/ansible\/hosts/inventory      = \/etc\/ansible\/hosts/' /etc/ansible/ansible.cfg 
-echo -e "\host_key_checking = False" | sudo tee -a /etc/ansible/ansible.cfg
+sudo sed -i '/^#?host_key_checking[[:space:]]*=/{s/^#//;s/=.*/= False/}' /etc/ansible/ansible.cfg
 cat > /etc/ansible/hosts <<EOF
 HQ-RTR ansible_host=192.168.1.1 ansible_user=net_admin ansible_password=P@$$word ansible_connection=network_cli ansible_network_os=ios
 BR-RTR ansible_host=192.168.0.1 ansible_user=net_admin ansible_password=P@$$word ansible_connection=network_cli ansible_network_os=ios
