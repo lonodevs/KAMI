@@ -35,20 +35,15 @@ sshuser ALL=(ALL) NOPASSWD:ALL
 EOF
 
 
-CONFIG_FILE="/etc/openssh/sshd_config"  
+CONFIG_FILE="/etc/ssh/sshd_config"
 
-# Изменить SSH-порт с 22 на 2024  
-awk -i inplace '/^#Port 22$/ { gsub(/22/, "2024"); $0 = "Port 2024" } { print }' "$CONFIG_FILE"  
+awk -i inplace '/^#?Port[[:space:]]+22$/ {sub(/^#/,""); sub(/22/,"2024"); print; next} {print}' "$CONFIG_FILE"
 
-# Уменьшить MaxAuthTries с 6 до 2  
-awk -i inplace '/^#MaxAuthTries 6$/ { gsub(/6/, "2"); $0 = "MaxAuthTries 2" } { print }' "$CONFIG_FILE"  
+awk -i inplace '/^#?MaxAuthTries[[:space:]]+6$/ {sub(/^#/,""); sub(/6/,"2"); print; next} {print}' "$CONFIG_FILE"
 
-echo "Allow users = sshuser" >> "$CONFIG_FILE" 
+awk -i inplace '/^#?PasswordAuthentication[[:space:]]+(yes|no)$/ {sub(/^#/,""); sub(/no/,"yes"); print; next} {print}' "$CONFIG_FILE"
 
-
-# Разрешить аутентификацию по паролю  
-awk -i inplace '/^#PasswordAuthentication yes$/ { sub(/^#/, ""); print; next } { print }' "$CONFIG_FILE"  
-
+awk -i inplace '/^#?PubkeyAuthentication[[:space:]]+(yes|no)$/ {sub(/^#/,""); sub(/no/,"yes"); print; next} {print}' "$CONFIG_FILE"
 
 touch /etc/openssh/bannermotd  
 cat <<EOF > /etc/openssh/bannermotd 
