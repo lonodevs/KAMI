@@ -34,7 +34,6 @@ cat <<EOF /etc/sudoers
 sshuser ALL=(ALL) NOPASSWD:ALL
 EOF
 
-
 CONFIG_FILE="/etc/ssh/sshd_config"
 
 echo "AllowUsers sshuser" | tee -a /etc/openssh/sshd_config
