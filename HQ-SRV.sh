@@ -34,14 +34,14 @@ cat <<EOF /etc/sudoers
 sshuser ALL=(ALL) NOPASSWD:ALL
 EOF
 
-CONFIG_FILE="/etc/ssh/sshd_config"
+CONFIG_FILE="/etc/openssh/sshd_config"
 
-sudo sed -i.bak -E '
-    s/^#?(Port[[:space:]]+)22$/\12024/;
-    s/^#?(MaxAuthTries[[:space:]]+)6$/\12/;
-    s/^#?(PasswordAuthentication[[:space:]]+).*$/\1yes/;
-    s/^#?(PubkeyAuthentication[[:space:]]+).*$/\1yes/
-' /etc/ssh/sshd_configFIG_FILE"
+
+echo "AllowUsers sshuser" | tee -a /etc/openssh/sshd_config
+awk -i inplace '/^#?Port[[:space:]]+22$/ {sub(/^#/,""); sub(/22/,"2024"); print; next} {print}' "$CONFIG_FILE"
+awk -i inplace '/^#?MaxAuthTries[[:space:]]+6$/ {sub(/^#/,""); sub(/6/,"2"); print; next} {print}' "$CONFIG_FILE"
+awk -i inplace '/^#?PasswordAuthentication[[:space:]]+(yes|no)$/ {sub(/^#/,""); sub(/no/,"yes"); print; next} {print}' "$CONFIG_FILE"
+awk -i inplace '/^#?PubkeyAuthentication[[:space:]]+(yes|no)$/ {sub(/^#/,""); sub(/no/,"yes"); print; next} {print}' "$CONFIG_FILE"
 
 touch /etc/openssh/bannermotd  
 cat <<EOF > /etc/openssh/bannermotd 
