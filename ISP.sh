@@ -1,6 +1,7 @@
 #!/bin/bash
 
 hostnamectl set-hostname ISP;
+timedatectl set-timezone Europe/Samara
 
 mkdir /etc/net/ifaces/ens19
 mkdir /etc/net/ifaces/ens20
