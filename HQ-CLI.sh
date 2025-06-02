@@ -1,5 +1,5 @@
 #!/bin/bash
-
+apt-get install -y tzdata
 hostnamectl set-hostname hq-cli.au-team.irpo;
 timedatectl set-timezone Europe/Samara
 
