@@ -44,36 +44,29 @@ firewall-cmd --reload
 systemctl restart firewalld
 systemctl restart network
 
-# Создание пользователя sshuser и настройка sshd конфига
 useradd sshuser -u 1010
 echo "sshuser:P@ssw0rd" | chpasswd
 usermod -aG wheel sshuser
 
-cat <<EOF > /etc/sudoers
+touch /etc/sudoers
+cat <<EOF /etc/sudoers
 sshuser ALL=(ALL) NOPASSWD:ALL
 EOF
 
-CONFIG_FILE="/etc/openssh/sshd_config"  
-
-# Изменить SSH-порт с 22 на 2024  
-awk -i inplace '/^#Port 22$/ { gsub(/22/, "2024"); $0 = "Port 2024" } { print }' "$CONFIG_FILE"  
-
-# Уменьшить MaxAuthTries с 6 до 2  
-awk -i inplace '/^#MaxAuthTries 6$/ { gsub(/6/, "2"); $0 = "MaxAuthTries 2" } { print }' "$CONFIG_FILE"  
-
-# Разрешить аутентификацию по паролю  
-awk -i inplace '/^#PasswordAuthentication yes$/ { sub(/^#/, ""); print; next } { print }' "$CONFIG_FILE" 
-
-
-touch /etc/openssh/banner
-cat <<EOF > /etc/openssh/banner
-
-----------------------  
-Authorized access only  
-----------------------  
-EOF
+CONFIG_FILE="/etc/openssh/sshd_config"
 
 echo "AllowUsers sshuser" | tee -a /etc/openssh/sshd_config
-systemctl restart sshd
+awk -i inplace '/^#?Port[[:space:]]+22$/ {sub(/^#/,""); sub(/22/,"2024"); print; next} {print}' "$CONFIG_FILE"
+awk -i inplace '/^#?MaxAuthTries[[:space:]]+6$/ {sub(/^#/,""); sub(/6/,"2"); print; next} {print}' "$CONFIG_FILE"
+awk -i inplace '/^#?PasswordAuthentication[[:space:]]+(yes|no)$/ {sub(/^#/,""); sub(/no/,"yes"); print; next} {print}' "$CONFIG_FILE"
+awk -i inplace '/^#?PubkeyAuthentication[[:space:]]+(yes|no)$/ {sub(/^#/,""); sub(/no/,"yes"); print; next} {print}' "$CONFIG_FILE"
+
+touch /etc/openssh/bannermotd  
+cat <<EOF > /etc/openssh/bannermotd 
+Authorized access only  
+EOF  
+
+systemctl restart sshd  
+
 
 hostnamectl set-hostname ISP; exec bash
