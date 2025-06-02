@@ -1,5 +1,5 @@
 #!/bin/bash
-
+apt-get install -y tzdata
 hostnamectl set-hostname ISP;
 timedatectl set-timezone Europe/Samara
 
