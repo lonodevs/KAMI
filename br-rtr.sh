@@ -2,6 +2,7 @@ ena
 conf t
 hostname br-rtr
 ip domain-name au-team.irpo
+
 interface int0
 description "to isp"
 ip address 172.16.5.14/28
@@ -10,6 +11,7 @@ service-instance te0/int0
 encapsulation untagged
 interface int0
 connect port te0 service-instance te0/int0
+
 interface int1
 description "to hq-srv"
 ip address 192.168.22.1/27
@@ -18,6 +20,7 @@ service-instance te1/int1
 encapsulation untagged
 interface int1
 connect port te1 service-instance te1/int1
+
 exit
 ip route 0.0.0.0/0 172.16.5.1
 username net_admin
