@@ -1,6 +1,7 @@
 #!/bin/bash
 
 hostnamectl set-hostname hq-srv.au-team.irpo
+timedatectl set-timezone Europe/Samara
 cat <<EOF > /etc/net/ifaces/ens18/options
 TYPE=eth
 DISABLED=no
@@ -122,8 +123,8 @@ host-record=hq-cli.au-team.irpo,192.168.23.66
 address=/br-rtr.au-team.irpo/192.168.22.1
 address=/br-srv.au-team.irpo/192.168.22.30
 
-cname=moodle.au-team.irpo,hq-rtr.au-team.irpo
-cname=wiki.au-team.irpo,hq-rtr.au-team.irpo
+cname=moodle.au-team.irpo,isp.au-team.irpo
+cname=wiki.au-team.irpo,isp.au-team.irpo
 EOF
 systemctl restart dnsmasq
 
