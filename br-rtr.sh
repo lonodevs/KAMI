@@ -13,7 +13,7 @@ interface int0
 connect port te0 service-instance te0/int0
 
 interface int1
-description "to hq-srv"
+description "to br-srv"
 ip address 192.168.22.1/27
 port te1
 service-instance te1/int1
