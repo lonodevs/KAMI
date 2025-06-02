@@ -11,12 +11,12 @@ EOF
 
 touch /etc/net/ifaces/ens18/ipv4address
 cat <<EOF > /etc/net/ifaces/ens18/ipv4address
-192.168.1.62/26
+192.168.23.62/26
 EOF
 
 touch /etc/net/ifaces/ens18/ipv4route
 cat <<EOF > /etc/net/ifaces/ens18/ipv4route
-default via 192.168.1.1
+default via 192.168.23.1
 EOF
 
 cat <<EOF > /etc/resolv.conf
@@ -106,7 +106,7 @@ cat > /etc/dnsmasq.conf <<EOF
 no-resolv
 no-poll
 no-hosts
-listen-address=192.168.1.62
+listen-address=192.168.23.62
 
 server=77.88.8.8
 server=8.8.8.8
@@ -115,12 +115,12 @@ cache-size=1000
 all-servers
 no-negcache
 
-host-record=hq-rtr.au-team.irpo,192.168.1.1
-host-record=hq-srv.au-team.irpo,192.168.1.62
-host-record=hq-cli.au-team.irpo,192.168.1.66
+host-record=hq-rtr.au-team.irpo,192.168.23.1
+host-record=hq-srv.au-team.irpo,192.168.23.62
+host-record=hq-cli.au-team.irpo,192.168.23.66
 
-address=/br-rtr.au-team.irpo/192.168.0.1
-address=/br-srv.au-team.irpo/192.168.0.30
+address=/br-rtr.au-team.irpo/192.168.22.1
+address=/br-srv.au-team.irpo/192.168.22.30
 
 cname=moodle.au-team.irpo,hq-rtr.au-team.irpo
 cname=wiki.au-team.irpo,hq-rtr.au-team.irpo
