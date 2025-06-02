@@ -2,6 +2,7 @@ ena
 conf t
 hostname hq-rtr
 ip domain-name au-team.irpo
+
 interface int0
 description "to isp"
 ip address 172.16.4.14/28
@@ -10,6 +11,7 @@ service-instance te0/int0
 encapsulation untagged
 interface int0
 connect port te0 service-instance te0/int0
+
 interface int1
 description "to hq-srv"
 ip address 192.168.23.1/26
@@ -17,8 +19,10 @@ port te1
 service-instance te1/int1
 encapsulation dot1q 100 exact
 rewrite pop 1
+
 interface int1
 connect port te1 service-instance te1/int1
+
 interface int2
 description "to hq-cli"
 ip address 192.168.23.65/28
@@ -28,6 +32,7 @@ encapsulation dot1q 200 exact
 rewrite pop 1
 interface int2
 connect port te1 service-instance te1/int2
+
 interface int3
 description "to management"
 ip address 192.168.23.81/29
