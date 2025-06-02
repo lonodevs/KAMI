@@ -65,8 +65,8 @@ awk -i inplace '/^#MaxAuthTries 6$/ { gsub(/6/, "2"); $0 = "MaxAuthTries 2" } { 
 awk -i inplace '/^#PasswordAuthentication yes$/ { sub(/^#/, ""); print; next } { print }' "$CONFIG_FILE" 
 
 
-touch /etc/openssh/bannermotd
-cat <<EOF > /etc/openssh/bannermotd
+touch /etc/openssh/banner
+cat <<EOF > /etc/openssh/banner
 
 ----------------------  
 Authorized access only  
