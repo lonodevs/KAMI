@@ -1,7 +1,8 @@
 #!/bin/bash
 
 #Переименование виртуалки
-hostnamectl set-hostname br-srv.au-team.irpo; 
+hostnamectl set-hostname br-srv.au-team.irpo;
+timedatectl set-timezone Europe/Samara
 
 #Настройка интерфейсов и времени
 cat <<EOF > /etc/net/ifaces/ens18/options
