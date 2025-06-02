@@ -1,6 +1,7 @@
 #!/bin/bash
 
 hostnamectl set-hostname hq-cli.au-team.irpo;
+timedatectl set-timezone Europe/Samara
 
 useradd sshuser -u 1010
 echo "sshuser:P@ssw0rd" | chpasswd
