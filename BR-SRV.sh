@@ -1,5 +1,5 @@
 #!/bin/bash
-
+apt-get install -y tzdata
 #Переименование виртуалки
 hostnamectl set-hostname br-srv.au-team.irpo;
 timedatectl set-timezone Europe/Samara
