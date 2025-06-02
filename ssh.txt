@@ -2,6 +2,7 @@
 vim /etc/openssh/sshd_config
 # Добавляем следующие строки:
 Port 2024
+MaxAuthTries 2
 PubkeyAuthentication yes
 PasswordAuthentication yes
 Banner /etc/openssh/bannermotd
