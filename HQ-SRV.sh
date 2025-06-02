@@ -1,5 +1,5 @@
 #!/bin/bash
-
+apt-get install -y tzdata
 hostnamectl set-hostname hq-srv.au-team.irpo
 timedatectl set-timezone Europe/Samara
 cat <<EOF > /etc/net/ifaces/ens18/options
