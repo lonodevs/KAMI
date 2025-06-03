@@ -1,7 +1,7 @@
 # Настройка SSH на всех машинах
 vim /etc/openssh/sshd_config
 # Добавляем следующие строки:
-Port 2024
+Port 3015
 MaxAuthTries 2
 PubkeyAuthentication yes
 PasswordAuthentication yes
