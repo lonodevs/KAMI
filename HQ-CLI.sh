@@ -35,6 +35,6 @@ apt-get update && apt-get install -y nfs-{utils,clients}
 mkdir /mnt/nfs 
 chmod 777 /mnt/nfs 
 vim /etc/fstab
-192.168.18.30:/raid5/nfs /mnt/nfs nfs defaults 0 0
+192.168.18.30:/raid0/nfs /mnt/nfs nfs defaults 0 0
 mount -av
 df -h
