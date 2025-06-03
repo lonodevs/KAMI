@@ -1,3 +1,4 @@
+СУС 2.5
 # На HQ-CLI:
 mv /home/AU-TEAM.IRPO/administrator/Downloads/LocalSettings.php /home/sshuser
 scp -P 2024 /home/sshuser/LocalSettings.php sshuser@192.168.22.30:/home/sshuser
