@@ -40,6 +40,7 @@ systemctl restart dnsmasq
 
 NFS
 СУС 2.2
+mdadm --create --verbose /dev/md0 -l 0 -n 3 /dev/sd{b,c,d}
 
 
 
